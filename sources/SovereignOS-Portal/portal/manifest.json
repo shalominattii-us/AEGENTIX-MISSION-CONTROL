@@ -1,0 +1,7 @@
+{
+  "name": "SovereignOS Portal",
+  "version": "1.0.0",
+  "description": "Portal layer for SovereignOS",
+  "api": "portal/api/main.py",
+  "ui": "portal/ui/index.html"
+}
