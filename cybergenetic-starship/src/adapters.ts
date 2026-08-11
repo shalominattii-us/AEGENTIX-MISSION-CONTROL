@@ -1,0 +1,4 @@
+import {StarshipRuntime} from './runtime.js';
+export class AbletonAdapter{constructor(private r:StarshipRuntime){} midi(type:string,data:Record<string,unknown>){return this.r.ingest('ABLETON','CYBERDAW','CREATE',`MIDI_${type}`,data,2,['MIDI_INPUT'],'CREATIVE');}}
+export class RoboticsAdapter{constructor(private r:StarshipRuntime){} telemetry(deviceId:string,data:Record<string,unknown>){return this.r.ingest('ROBOTICS',deviceId,'OBSERVE','TELEMETRY',data,2,['READ_TELEMETRY'],'ROBOTICS');} command(deviceId:string,command:string,args:Record<string,unknown>){return this.r.ingest('ROBOTICS',deviceId,'CONTROL',command,args,4,['COMMAND_DEVICE'],'ROBOTICS');}}
+export class DroneAdapter extends RoboticsAdapter{flightFrame(deviceId:string,data:Record<string,unknown>){return this.telemetry(deviceId,{flightRecorder:true,...data});}}
