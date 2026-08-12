@@ -1,0 +1,4 @@
+import {createHash} from 'node:crypto';
+import type {CyberEvent,RecorderFrame} from './types.js';
+
+export class FlightRecorder {private frames:RecorderFrame[]=[]; private prev='GENESIS'; append(e:CyberEvent){const seq=this.frames.length+1;const body=JSON.stringify({seq,ts:e.ts,eventId:e.id,source:e.source,payload:e.payload,parent:this.prev});const hash=createHash('sha256').update(body).digest('hex');const f={seq,ts:e.ts,eventId:e.id,source:e.source,payload:e.payload,hash};this.frames.push(f);this.prev=hash;return f;} verify(){let prev='GENESIS';for(const f of this.frames){const body=JSON.stringify({seq:f.seq,ts:f.ts,eventId:f.eventId,source:f.source,payload:f.payload,parent:prev});if(createHash('sha256').update(body).digest('hex')!==f.hash)return false;prev=f.hash;}return true;} export(){return {format:'CG-FDR-0.1',frames:this.frames,integrity:this.verify()};}}

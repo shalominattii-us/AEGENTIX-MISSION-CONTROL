@@ -1,0 +1,3 @@
+import {StarshipRuntime} from './runtime.js';
+export interface Expert{name:string;domains:string[];score(input:string):number;reason(input:string):string;}
+export class MixtureOfExperts{constructor(private runtime:StarshipRuntime,private experts:Expert[]){} route(input:string){const ranked=this.experts.map(e=>({expert:e,score:e.score(input)})).sort((a,b)=>b.score-a.score);const selected=ranked.filter(x=>x.score>0).slice(0,3);const event=this.runtime.ingest('MOE','EXPERT-ROUTER','LEARN','EXPERT_SELECTION',{input,experts:selected.map(x=>x.expert.name)},4,['ROUTE_EXPERT'],'INTELLIGENCE');return {event,selected:selected.map(x=>({name:x.expert.name,score:x.score,reason:x.expert.reason(input)}))};}}
